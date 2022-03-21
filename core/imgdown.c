@@ -132,20 +132,25 @@ void get_liz_cheney_image()
     char *text_uuid = malloc(37);
     uuid_unparse_lower(bin_uuid, text_uuid);
 
-    char *filename = malloc(300);
-    int filename_freed = 0;
+    char* full_file_path = malloc(900);
+    int ffp_freed = 0;
 
-    sprintf(filename, "/var/lib/lizcheneyd/liz-cheney-%s.jpg", text_uuid);
+    char* lizcheneyd_dir = "/var/lib/lizcheneyd/";
+    char* filename = malloc(300);
 
-    FILE *lc_img_fp = fopen(filename, "wb");
+
+    sprintf(filename, "liz-cheney-%s.jpg", text_uuid);
+    sprintf(full_file_path, "%s%s", lizcheneyd_dir, filename);
+
+    FILE *lc_img_fp = fopen(full_file_path, "wb");
 
     if (lc_img_fp == NULL) {
       // There was an error, let's not do that again.
-      syslog(LOG_USER, "Failed to open the file %s.", filename);
+      syslog(LOG_USER, "Failed to open the file %s.", full_file_path);
       should_extract_image = 0;
 
-      free(filename);
-      filename_freed = 1;
+      free(full_file_path);
+      ffp_freed = 1;
 
       return;
     }
@@ -158,11 +163,11 @@ void get_liz_cheney_image()
     CURLcode curl_rc = curl_easy_perform(img);
 
     fclose(lc_img_fp);
-    verify_liz_cheney_image(filename);
+    verify_liz_cheney_image(full_file_path);
 
-    if (filename_freed == 0) {
-      free(filename);
-      filename_freed = 1;
+    if (ffp_freed == 0) {
+      free(full_file_path);
+      ffp_freed = 1;
     }
   }
   else {
