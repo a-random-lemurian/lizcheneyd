@@ -28,10 +28,10 @@ int main(int argc, char **argv)
 
   argparse_init(&ap, options, NULL, 0);
 
-  argparse_describe(&ap, "Daemon that does nothing but pretends "
-                         "to look for Liz Cheney photos.",
+  argparse_describe(&ap, "Daemon that regularly downloads pictures of "
+                         "Liz Cheney from the internet.",
                          "Don't tell anyone!");
-  
+
   argparse_parse(&ap, argc, (const char**)argv);
 
 
