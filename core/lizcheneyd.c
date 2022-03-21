@@ -47,6 +47,7 @@ void get_images_of_liz_cheney()
 
 void lizcheneyd()
 {
+  syslog(LOG_NOTICE, "Started lizcheneyd.");
   signal(SIGINT, lizcheneyd_sigint_handler);
 
   for (;;) {
