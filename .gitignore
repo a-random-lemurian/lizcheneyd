@@ -1,0 +1,11 @@
+lizcheneyd
+*.out
+*.a
+*.o
+*.exe
+*.app
+.vscode
+build
+.vs
+.cache
+*.log
