@@ -4,8 +4,10 @@
 
 void should_shutdown()
 {
-  if (counter_cycles > cycles_before_shutdown) {
-    shutdown_because_of(CYCLE_TARGET_REACHED);
+  if (cycles_before_shutdown != 0) {
+    if (counter_cycles > cycles_before_shutdown) {
+      shutdown_because_of(CYCLE_TARGET_REACHED);
+    }
   }
 }
 
