@@ -1,5 +1,6 @@
 #include "lizcheneyd.h"
 #include "shutdown.h"
+#include "imgdown.h"
 
 #include <argparse.h>
 #include <math.h>
@@ -20,6 +21,8 @@ int main(int argc, char **argv)
                 "Do not daemonize"),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
+    OPT_STRING(0, "uagent", &preferred_lizcheneyd_user_agent,
+               "Set a user agent"),
     OPT_END()
   };
 
