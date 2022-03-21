@@ -11,6 +11,7 @@
 #include <time.h>
 
 static int process_should_not_be_daemon = 0;
+static char* user_agent = NULL;
 
 int main(int argc, char **argv)
 {
@@ -21,7 +22,7 @@ int main(int argc, char **argv)
                 "Do not daemonize"),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
-    OPT_STRING(0, "uagent", &preferred_lizcheneyd_user_agent,
+    OPT_STRING(0, "uagent", &user_agent,
                "Set a user agent"),
     OPT_END()
   };
@@ -34,6 +35,9 @@ int main(int argc, char **argv)
 
   argparse_parse(&ap, argc, (const char**)argv);
 
+  if (user_agent != NULL) {
+    set_lizcheneyd_user_agent(user_agent);
+  }
 
   if (!process_should_not_be_daemon) {
     if (daemon(0, 0) != 0) {

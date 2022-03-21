@@ -42,6 +42,11 @@ static const char *liz_cheney_image_sha256sum =
 
 static char* preferred_lizcheneyd_user_agent = LIZCHENEYD_USER_AGENT;
 
+void set_lizcheneyd_user_agent(char* new_agent)
+{
+  preferred_lizcheneyd_user_agent = new_agent;
+}
+
 void get_image(const char *person)
 {
   if (!strncasecmp(person, "Liz Cheney", 11)) {
