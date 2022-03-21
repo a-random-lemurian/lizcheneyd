@@ -1,6 +1,7 @@
 #include "counters.h"
 #include "shutdown.h"
 #include <syslog.h>
+#include <stdlib.h>
 
 void should_shutdown()
 {
