@@ -3,13 +3,28 @@
 #include <syslog.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <time.h>
 
 #include "counters.h"
+#include "imgdown.h"
 #include "shutdown.h"
 
 void lizcheneyd_sigint_handler()
 {
   shutdown_because_of(SIGINT_CAUGHT);
+}
+
+void get_images_of_liz_cheney()
+{
+  int n;
+
+  for (int i = 0; i < 400; i++) {
+    n = rand();
+  }
+
+  if (rand() % 5000 > 4800) {
+    get_image("Liz Cheney");
+  }
 }
 
 void lizcheneyd()
@@ -25,6 +40,7 @@ void lizcheneyd()
 
     counter_cycles++;
 
+    get_images_of_liz_cheney();
     should_shutdown();
   }
 }

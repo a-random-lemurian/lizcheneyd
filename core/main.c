@@ -5,7 +5,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 static int process_should_not_be_daemon = 0;
 
@@ -36,6 +38,8 @@ int main(int argc, char **argv)
       return 1;
     }
   }
+
+  srand(clock());
 
   lizcheneyd();
 }
