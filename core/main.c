@@ -1,4 +1,6 @@
 #include "lizcheneyd.h"
+#include "shutdown.h"
+
 #include <argparse.h>
 #include <math.h>
 #include <stdio.h>
@@ -14,6 +16,8 @@ int main(int argc, char **argv)
     OPT_HELP(),
     OPT_BOOLEAN(0, "no-daemon", &process_should_not_be_daemon,
                 "Do not daemonize"),
+    OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
+                "Run for a limited number of cycles before shutdown"),
     OPT_END()
   };
 
