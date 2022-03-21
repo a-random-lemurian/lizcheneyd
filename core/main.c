@@ -11,6 +11,7 @@
 #include <time.h>
 
 static int process_should_not_be_daemon = 0;
+static int cycles_before_shutdown = 0;
 static char* user_agent = NULL;
 
 int main(int argc, char **argv)
@@ -34,6 +35,8 @@ int main(int argc, char **argv)
                          "Don't tell anyone!");
 
   argparse_parse(&ap, argc, (const char**)argv);
+
+  set_cycles_before_shutdown(cycles_before_shutdown);
 
   if (user_agent != NULL) {
     set_lizcheneyd_user_agent(user_agent);
