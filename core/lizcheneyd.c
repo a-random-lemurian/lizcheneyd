@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include "counters.h"
 #include "shutdown.h"
 
 void lizcheneyd_sigint_handler()
