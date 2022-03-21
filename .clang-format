@@ -1,0 +1,3 @@
+BreakBeforeBraces: Stroustrup
+UseTab: Never
+IndentWidth: 2
