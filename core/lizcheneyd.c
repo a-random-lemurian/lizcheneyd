@@ -5,9 +5,22 @@
 #include <signal.h>
 #include <time.h>
 
-#include "counters.h"
 #include "imgdown.h"
 #include "shutdown.h"
+
+
+static size_t counter_cycles = 0;
+static int cycles_before_shutdown = 0;
+
+int get_cycles_before_shutdown()
+{
+  return cycles_before_shutdown;
+}
+
+size_t get_cycles_done()
+{
+  return counter_cycles;
+}
 
 void lizcheneyd_sigint_handler()
 {

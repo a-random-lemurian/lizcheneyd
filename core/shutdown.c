@@ -1,12 +1,12 @@
-#include "counters.h"
 #include "shutdown.h"
+#include "lizcheneyd.h"
 #include <syslog.h>
 #include <stdlib.h>
 
 void should_shutdown()
 {
-  if (cycles_before_shutdown != 0) {
-    if (counter_cycles > cycles_before_shutdown) {
+  if (get_cycles_before_shutdown() != 0) {
+    if (get_cycles_done() > get_cycles_before_shutdown()) {
       shutdown_because_of(CYCLE_TARGET_REACHED);
     }
   }
@@ -22,7 +22,7 @@ void shutdown_because_of(int reason)
 
   syslog(LOG_NOTICE,
          "Shutting down now (ran through %ld cycles). Reason: %s\n",
-         counter_cycles, reason_string);
+         get_cycles_done(), reason_string);
 
   shutdown(0);
 }
