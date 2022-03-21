@@ -4,18 +4,11 @@
 #include <stdlib.h>
 #include <signal.h>
 
-static size_t counter_cycles = 0;
-
-void shutdown()
-{
-  syslog(LOG_NOTICE, "Shutting down now (ran through %ld cycles)\n",
-         counter_cycles);
-  exit(0);
-}
+#include "shutdown.h"
 
 void lizcheneyd_sigint_handler()
 {
-  shutdown();
+  shutdown_because_of(SIGINT_CAUGHT);
 }
 
 void lizcheneyd()
@@ -30,5 +23,7 @@ void lizcheneyd()
     }
 
     counter_cycles++;
+
+    should_shutdown();
   }
 }
