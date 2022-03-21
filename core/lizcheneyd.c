@@ -53,6 +53,8 @@ void lizcheneyd()
 
     counter_cycles++;
 
+    syslog(LOG_DEBUG, "Completed cycle %ld.", counter_cycles);
+
     get_images_of_liz_cheney();
     should_shutdown();
   }
