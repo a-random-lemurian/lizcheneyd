@@ -54,7 +54,7 @@ static char* preferred_lizcheneyd_user_agent = LIZCHENEYD_USER_AGENT;
 
 static int liz_cheney_images_downloaded = 0;
 
-void should_extract_images()
+int should_extract_images()
 {
   return should_extract_image;
 }
