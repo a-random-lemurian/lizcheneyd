@@ -41,7 +41,7 @@ void get_images_of_liz_cheney()
   }
 
   if (rand() % 5000 > 4800) {
-    lizcheneyd_get_image("Liz Cheney");
+    lizcheneyd_get_image_of("Liz Cheney");
   }
 }
 

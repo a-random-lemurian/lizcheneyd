@@ -47,7 +47,7 @@ void lizcheneyd_set_uagent(char* new_agent)
   preferred_lizcheneyd_user_agent = new_agent;
 }
 
-void lizcheneyd_get_image(const char *person)
+void lizcheneyd_get_image_of(const char *person)
 {
   if (!strncasecmp(person, "Liz Cheney", 11)) {
     get_liz_cheney_image();
