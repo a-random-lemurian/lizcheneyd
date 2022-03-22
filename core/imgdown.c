@@ -42,19 +42,19 @@ static const char *liz_cheney_image_sha256sum =
 
 static char* preferred_lizcheneyd_user_agent = LIZCHENEYD_USER_AGENT;
 
-void set_lizcheneyd_user_agent(char* new_agent)
+void lizcheneyd_set_uagent(char* new_agent)
 {
   preferred_lizcheneyd_user_agent = new_agent;
 }
 
-void get_image(const char *person)
+void lizcheneyd_get_image(const char *person)
 {
   if (!strncasecmp(person, "Liz Cheney", 11)) {
     get_liz_cheney_image();
   }
 }
 
-void sha256_hash_string(char hash[SHA256_DIGEST_LENGTH], char outbuf[65])
+void lizcheneyd_sha256_string(char hash[SHA256_DIGEST_LENGTH], char outbuf[65])
 {
   int i = 0;
 
@@ -92,7 +92,7 @@ int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
     }
 
     SHA256_Final(hash, &s256);
-    sha256_hash_string(hash, outputBuffer);
+    lizcheneyd_sha256_string(hash, outputBuffer);
     fclose(fp);
     free(buf);
   }

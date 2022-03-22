@@ -29,7 +29,7 @@ void set_cycles_before_shutdown(int new)
 
 void lizcheneyd_sigint_handler()
 {
-  shutdown_because_of(SIGINT_CAUGHT);
+  lizcheneyd_shutdown_because_of(SIGINT_CAUGHT);
 }
 
 void get_images_of_liz_cheney()
@@ -41,7 +41,7 @@ void get_images_of_liz_cheney()
   }
 
   if (rand() % 5000 > 4800) {
-    get_image("Liz Cheney");
+    lizcheneyd_get_image("Liz Cheney");
   }
 }
 
@@ -62,6 +62,6 @@ void lizcheneyd()
     syslog(LOG_DEBUG, "Completed cycle %ld.", counter_cycles);
 
     get_images_of_liz_cheney();
-    should_shutdown();
+    lizcheneyd_should_shutdown();
   }
 }

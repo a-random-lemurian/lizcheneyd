@@ -3,16 +3,16 @@
 #include <syslog.h>
 #include <stdlib.h>
 
-void should_shutdown()
+void lizcheneyd_should_shutdown()
 {
   if (get_cycles_before_shutdown() != 0) {
     if (get_cycles_done() > get_cycles_before_shutdown()) {
-      shutdown_because_of(CYCLE_TARGET_REACHED);
+      lizcheneyd_shutdown_because_of(CYCLE_TARGET_REACHED);
     }
   }
 }
 
-void shutdown_because_of(int reason)
+void lizcheneyd_shutdown_because_of(int reason)
 {
   char* reason_string = "None.";
 
@@ -24,10 +24,10 @@ void shutdown_because_of(int reason)
          "Shutting down now (ran through %ld cycles). Reason: %s\n",
          get_cycles_done(), reason_string);
 
-  shutdown(0);
+  lizcheneyd_shutdown(0);
 }
 
-void shutdown(int exit_code)
+void lizcheneyd_shutdown(int exit_code)
 {
   exit(exit_code);
 }

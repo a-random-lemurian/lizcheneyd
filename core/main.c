@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   set_cycles_before_shutdown(cycles_before_shutdown);
 
   if (user_agent != NULL) {
-    set_lizcheneyd_user_agent(user_agent);
+    lizcheneyd_set_uagent(user_agent);
   }
 
   if (!process_should_not_be_daemon) {
