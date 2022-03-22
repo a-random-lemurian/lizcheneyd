@@ -42,6 +42,16 @@ static const char *liz_cheney_image_sha256sum =
 
 static char* preferred_lizcheneyd_user_agent = LIZCHENEYD_USER_AGENT;
 
+void should_extract_images()
+{
+  return should_extract_image;
+}
+
+void set_should_extract_image(int new)
+{
+  should_extract_image = new;
+}
+
 void lizcheneyd_set_uagent(char* new_agent)
 {
   preferred_lizcheneyd_user_agent = new_agent;
@@ -173,4 +183,10 @@ void get_liz_cheney_image()
   else {
     // add error handlers here
   }
+}
+
+int lizcheneyd_check_dir_access_wrapper()
+{
+  return lizcheneyd_check_dir_access(lizcheneyd_dir,
+                                     strlen(lizcheneyd_dir) + 1);
 }
