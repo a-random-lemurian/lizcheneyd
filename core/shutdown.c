@@ -6,8 +6,11 @@
 
 void lizcheneyd_should_shutdown()
 {
-  if (get_cycles_before_shutdown() != 0) {
-    if (get_cycles_done() > get_cycles_before_shutdown()) {
+  int cbs = get_cycles_before_shutdown();
+  int cycles_done = get_cycles_done();
+
+  if (cbs != 0) {
+    if (cycles_done > cbs) {
       lizcheneyd_shutdown_because_of(CYCLE_TARGET_REACHED);
     }
   }
