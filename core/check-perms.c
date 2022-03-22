@@ -45,7 +45,8 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
       syslog(LOG_ERR, "Unable to delete files in %s. lizcheneyd will "
                       "be unable to clean up after itself. Please manually "
                       "remove all Liz Cheney images in %s when you feel "
-                      "like it. Or contact your local system administrator.");
+                      "like it. Or contact your local system administrator.",
+                      directory, directory);
       rc = 1;
     }
   }
