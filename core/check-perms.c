@@ -30,7 +30,7 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
       syslog(LOG_ERR, "Unable to open files in %s!", directory);
       syslog(LOG_ERR, "For the rest of session, will not "
              "download any images of Liz Cheney.");
-      should_extract_image = 0;
+      set_should_extract_image(0);
       rc = 1;
     }
   }
