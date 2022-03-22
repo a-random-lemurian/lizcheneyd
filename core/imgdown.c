@@ -52,6 +52,8 @@ static const char *liz_cheney_image_sha256sum =
 
 static char* preferred_lizcheneyd_user_agent = LIZCHENEYD_USER_AGENT;
 
+static int liz_cheney_images_downloaded = 0;
+
 void should_extract_images()
 {
   return should_extract_image;
@@ -186,6 +188,13 @@ void get_liz_cheney_image()
 
     fclose(lc_img_fp);
     verify_liz_cheney_image(full_file_path);
+
+    syslog(LOG_NOTICE,
+           "Successfully downloaded an image of Liz Cheney, "
+           "this session %d downloaded so far.",
+           liz_cheney_images_downloaded);
+
+    liz_cheney_images_downloaded++;
 
     if (ffp_freed == 0) {
       free(full_file_path);
