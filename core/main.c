@@ -1,7 +1,3 @@
-#include "lizcheneyd.h"
-#include "shutdown.h"
-#include "imgdown.h"
-
 #include <argparse.h>
 #include <math.h>
 #include <stdio.h>
@@ -9,6 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+
+#include "lizcheneyd.h"
+#include "shutdown.h"
+#include "imgdown.h"
 
 static int process_should_not_be_daemon = 0;
 static int cycles_before_shutdown = 0;

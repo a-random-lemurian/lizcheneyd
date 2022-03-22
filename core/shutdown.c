@@ -1,7 +1,8 @@
-#include "shutdown.h"
-#include "lizcheneyd.h"
 #include <syslog.h>
 #include <stdlib.h>
+
+#include "shutdown.h"
+#include "lizcheneyd.h"
 
 void lizcheneyd_should_shutdown()
 {
