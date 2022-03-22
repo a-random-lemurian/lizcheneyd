@@ -141,6 +141,9 @@ void verify_liz_cheney_image(const char* filename)
 void get_liz_cheney_image()
 {
   if (should_extract_image == 0) {
+    syslog(LOG_NOTICE, "We would have downloaded a picture of Liz Cheney,");
+    syslog(LOG_NOTICE, "but there was an error previously, so we won't this "
+                       "time.");
     return;
   }
 
