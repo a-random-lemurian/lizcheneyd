@@ -8,6 +8,16 @@
 #include <openssl/sha.h>
 
 #include "imgdown.h"
+#include "check-perms.h"
+
+/*
+ * Default lizcheneyd image directory. Always add an ending forward
+ * slash to the image. If you use Windows, don't even try, since this
+ * software only works with Linux with limited macOS support.
+ * 
+ * TODO: allow changing this
+ */
+static char* lizcheneyd_dir = "/var/lib/lizcheneyd/";
 
 static int should_extract_image = 1;
 static const char *liz_cheney_image_url =
@@ -145,7 +155,6 @@ void get_liz_cheney_image()
     char* full_file_path = malloc(900);
     int ffp_freed = 0;
 
-    char* lizcheneyd_dir = "/var/lib/lizcheneyd/";
     char* filename = malloc(300);
 
 
