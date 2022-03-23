@@ -80,8 +80,7 @@ void lizcheneyd_sha256_string(char hash[SHA256_DIGEST_LENGTH], char outbuf[65])
 {
   int i = 0;
 
-  for(i = 0; i < SHA256_DIGEST_LENGTH; i++)
-  {
+  for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
     sprintf(outbuf + (i * 2), "%02x", (unsigned char)hash[i]);
   }
 
