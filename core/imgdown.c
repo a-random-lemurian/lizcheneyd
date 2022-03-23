@@ -8,6 +8,7 @@
 #include <openssl/sha.h>
 
 #include "imgdown.h"
+#include "logging.h"
 #include "check-perms.h"
 
 /*
@@ -151,6 +152,7 @@ void get_liz_cheney_image()
   }
 
   CURL *img = curl_easy_init();
+  log_trace("Initialized libcurl.");
 
   if (img) {
     uuid_t bin_uuid;
@@ -171,6 +173,9 @@ void get_liz_cheney_image()
 
     if (lc_img_fp == NULL) {
       // There was an error, let's not do that again.
+      log_error("Unable to download Liz Cheney image: "
+                "couldn't open file %s for binary writing.", full_file_path);
+
       syslog(LOG_USER, "Failed to open the file %s.", full_file_path);
       should_extract_image = 0;
 
@@ -186,14 +191,20 @@ void get_liz_cheney_image()
     curl_easy_setopt(img, CURLOPT_USERAGENT, preferred_lizcheneyd_user_agent);
 
     CURLcode curl_rc = curl_easy_perform(img);
+    log_info("Downloaded image of Liz Cheney.");
 
     fclose(lc_img_fp);
+
     verify_liz_cheney_image(full_file_path);
 
-    syslog(LOG_NOTICE,
-           "Successfully downloaded an image of Liz Cheney, "
+
+    syslog(LOG_NOTICE,"Successfully downloaded an image of Liz Cheney, "
            "this session %d downloaded so far.",
            liz_cheney_images_downloaded);
+
+    log_info("Successfully downloaded an image of Liz Cheney, "
+             "this session %d downloaded so far.",
+             liz_cheney_images_downloaded);
 
     liz_cheney_images_downloaded++;
 

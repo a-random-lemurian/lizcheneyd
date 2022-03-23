@@ -9,6 +9,7 @@
 #include "lizcheneyd.h"
 #include "shutdown.h"
 #include "imgdown.h"
+#include "logging.h"
 
 static int process_should_not_be_daemon = 0;
 static int cycles_before_shutdown = 0;
@@ -42,11 +43,16 @@ int main(int argc, char **argv)
     lizcheneyd_set_uagent(user_agent);
   }
 
+
   if (!process_should_not_be_daemon) {
+    log_info("Making daemon system call.");
     if (daemon(0, 0) != 0) {
       printf("ERROR: Failed to daemonize.\n");
       return 1;
     }
+  }
+  else {
+    log_info("--no-daemon flag set, not daemonizing.");
   }
 
   srand(clock());
