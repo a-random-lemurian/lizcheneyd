@@ -46,9 +46,52 @@ void get_images_of_liz_cheney()
   }
 }
 
+void lizcheneyd_syslog_message(log_Event *le)
+{
+  openlog("lizcheneyd", LOG_PID, LOG_DAEMON);
+
+  int pri = LOG_INFO;
+
+  if (le->level == LCD_LOG_ERROR) {
+    pri = LOG_ERR;
+  }
+  else if (le->level == LCD_LOG_FATAL) {
+    pri = LOG_CRIT;
+  }
+  else if (le->level == LCD_LOG_DEBUG || LCD_LOG_TRACE) {
+    pri = LOG_DEBUG;
+  }
+  else if (le->level == LCD_LOG_WARN) {
+    pri = LOG_WARNING;
+  }
+
+  syslog(pri, le->udata, le->fmt);
+
+  closelog();
+}
+
+static const char* lizcheneyd_log_file = "/var/log/lizcheneyd.log";
+
+void lizcheneyd_init_logging()
+{
+  FILE* fp = fopen(lizcheneyd_log_file, "a");
+
+  if (fp != NULL) {
+    log_add_fp(fp, LCD_LOG_INFO);
+    log_info("Successfully opened file for logging.");
+  }
+  else if (fp == NULL) {
+    log_error("Unable to open %s!", lizcheneyd_log_file);
+  }
+
+  log_add_callback(lizcheneyd_syslog_message, NULL, LCD_LOG_INFO);
+}
+
 void lizcheneyd()
 {
   syslog(LOG_NOTICE, "Started lizcheneyd.");
+
+  lizcheneyd_init_logging();
 
   signal(SIGINT, lizcheneyd_sigint_handler);
   log_trace("Registered SIGINT handler.");
