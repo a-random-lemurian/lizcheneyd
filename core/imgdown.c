@@ -132,9 +132,10 @@ void verify_liz_cheney_image(const char* filename)
     
   }
   else {
-    syslog(0, "WARNING: Liz Cheney image download at %s has bad checksum!"
-              "Expected %s, got %s",
-              filename, liz_cheney_image_sha256sum, out_hash);
+    syslog(LOG_WARNING,
+           "WARNING: Liz Cheney image download at %s has bad checksum!"
+           "Expected %s, got %s",
+           filename, liz_cheney_image_sha256sum, out_hash);
   }
 
   free(out_hash);
