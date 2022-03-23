@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "imgdown.h"
+#include "logging.h"
 
 /*
  * Create a temporary dummy file in the lizcheneyd directory
@@ -31,6 +32,8 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
       syslog(LOG_ERR, "Unable to open files in %s!", directory);
       syslog(LOG_ERR, "For the rest of session, will not "
              "download any images of Liz Cheney.");
+      log_error("Unable to open files in %s, disabling Liz Cheney image "
+                "downloading for now.", directory);
       set_should_extract_image(0);
       rc = 1;
     }
@@ -41,6 +44,8 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
       syslog(LOG_NOTICE,
              "Permissions check for %s: Able to create and delete.",
              directory);
+      log_info("Permissions check for %s: Able to create and delete files.",
+               directory);
     }
     else {
       syslog(LOG_ERR, "Unable to delete files in %s. lizcheneyd will "
