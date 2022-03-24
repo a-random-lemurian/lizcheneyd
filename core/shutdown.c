@@ -23,6 +23,9 @@ void lizcheneyd_shutdown_because_of(int reason)
   if (reason == CYCLE_TARGET_REACHED) {
     reason_string = "Target number of cycles reached.";
   }
+  else if (reason == SIGINT_CAUGHT) {
+    reason_string = "Caught SIGINT.";
+  }
 
   syslog(LOG_NOTICE,
          "Shutting down now (ran through %ld cycles). Reason: %s\n",
