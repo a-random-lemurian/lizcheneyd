@@ -100,10 +100,6 @@ void lizcheneyd()
   for (;;) {
     sleep(20);
 
-    for (double i = 0; i < 5000000; i++) {
-      double n = sin(i) * 3;
-    }
-
     counter_cycles++;
 
     syslog(LOG_DEBUG, "Completed cycle %ld.", counter_cycles);

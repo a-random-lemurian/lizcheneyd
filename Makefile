@@ -12,7 +12,7 @@ SRC              := $(shell find $(SRC_DIR) -name '*.c')
 SRC              += argparse/argparse.c
 OBJ              := $(SRC:%=$(BUILD_DIR)/%.o)
 
-LINK_LIB_NAMES    = crypto uuid ssl curl m
+LINK_LIB_NAMES    = crypto uuid ssl curl
 LINK_LIB_FLAGS    = $(addprefix -l,$(LINK_LIB_NAMES))
 
 LDFLAGS           = -Os $(LINK_LIB_FLAGS)
