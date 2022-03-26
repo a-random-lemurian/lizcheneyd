@@ -38,7 +38,11 @@ int main(int argc, char **argv)
 
   argparse_describe(&ap, "Daemon that regularly downloads pictures of "
                          "Liz Cheney from the internet.",
-                         "Don't tell anyone!");
+                         "Don't tell anyone!\n"
+
+                         "The --no-return option should be used when\n"
+                         "starting lizcheneyd under an init daemon\n"
+                         "such as systemd.");
 
   argparse_parse(&ap, argc, (const char**)argv);
 
