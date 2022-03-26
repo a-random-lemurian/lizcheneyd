@@ -210,6 +210,8 @@ void lizcheneyd_get_image(const char* url, const char* out_path,
   else {
     // add error handlers here
   }
+
+  curl_easy_cleanup(img);
 }
 
 int lizcheneyd_check_dir_access_wrapper()
