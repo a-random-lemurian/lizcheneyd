@@ -5,6 +5,6 @@
 void lizcheneyd();
 int get_cycles_before_shutdown();
 size_t get_cycles_done();
-void set_cycles_before_shutdown(int new);
+void set_cycles_before_shutdown(int new_value);
 
 #endif /* LIZCHENEYD_H */

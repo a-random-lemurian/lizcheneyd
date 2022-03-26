@@ -9,7 +9,7 @@ void verify_liz_cheney_image(const char* filename);
 void get_liz_cheney_image();
 void lizcheneyd_set_uagent(char* new_agent);
 int should_extract_images();
-void set_should_extract_image(int new);
+void set_should_extract_image(int new_value);
 int lizcheneyd_check_dir_access_wrapper();
 
 #endif /* IMGDOWN_H */

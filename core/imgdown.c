@@ -60,9 +60,9 @@ int should_extract_images()
   return should_extract_image;
 }
 
-void set_should_extract_image(int new)
+void set_should_extract_image(int new_value)
 {
-  should_extract_image = new;
+  should_extract_image = new_value;
 }
 
 void lizcheneyd_set_uagent(char* new_agent)

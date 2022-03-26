@@ -22,9 +22,9 @@ size_t get_cycles_done()
   return counter_cycles;
 }
 
-void set_cycles_before_shutdown(int new)
+void set_cycles_before_shutdown(int new_value)
 {
-  cycles_before_shutdown = new;
+  cycles_before_shutdown = new_value;
 }
 
 void lizcheneyd_sigint_handler()
