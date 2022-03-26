@@ -1,5 +1,6 @@
 #ifndef LIZCHENEYD_H
 #define LIZCHENEYD_H
+#include "logging.h"
 #include <stddef.h>
 
 /*
