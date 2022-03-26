@@ -91,7 +91,8 @@ void lizcheneyd_get_image_of(const char *person)
     uuid_unparse_lower(binuuid, file_uuid);
 
     sprintf(file_name, "liz-cheney-%s", file_uuid);
-    sprintf(file_path, "%s%s",  file_dir, file_name);
+
+    lizcheneyd_get_image(liz_cheney_image_url, file_path, 1);
 
     if (!lizcheneyd_verify_file(file_path, liz_cheney_image_sha256sum)) {
       log_error("Bad checksum for Liz Cheney image.");
