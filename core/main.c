@@ -11,7 +11,7 @@
 #include "imgdown.h"
 #include "logging.h"
 
-static int process_should_not_be_daemon = 0;
+static int dont_fork = 0;
 static int cycles_before_shutdown = 0;
 static char* user_agent = NULL;
 
@@ -20,8 +20,13 @@ int main(int argc, char **argv)
   struct argparse ap;
   struct argparse_option options[] = {
     OPT_HELP(),
-    OPT_BOOLEAN(0, "no-daemon", &process_should_not_be_daemon,
-                "Do not daemonize"),
+
+    /* When lizcheneyd is started as a systemd service, without
+     * the --no-return option, systemd reports that the daemon fails
+     * to start. */
+    OPT_BOOLEAN(0, "no-return", &dont_fork,
+                "Do not return until daemon has finished running."),
+    OPT_BOOLEAN(0, "no-daemon", NULL, "Ignored (retained for backwards compatibility)"),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
     OPT_STRING(0, "uagent", &user_agent,
@@ -44,7 +49,7 @@ int main(int argc, char **argv)
   }
 
 
-  if (!process_should_not_be_daemon) {
+  if (!dont_fork) {
     log_info("Making daemon system call.");
     if (daemon(0, 0) != 0) {
       printf("ERROR: Failed to daemonize.\n");
@@ -52,7 +57,7 @@ int main(int argc, char **argv)
     }
   }
   else {
-    log_info("--no-daemon flag set, not daemonizing.");
+    log_info("--no-return flag set, not forking.");
   }
 
   srand(clock());
