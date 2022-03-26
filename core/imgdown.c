@@ -11,6 +11,9 @@
 #include "logging.h"
 #include "check-perms.h"
 
+
+static char* last_checksum = NULL;
+
 /*
  * Default lizcheneyd image directory. Always add an ending forward
  * slash to the image. If you use Windows, don't even try, since this
@@ -142,7 +145,7 @@ int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
   return 0;
 }
 
-static char* last_checksum = NULL;
+
 
 int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
 {
