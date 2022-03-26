@@ -8,6 +8,7 @@
 #include "imgdown.h"
 #include "shutdown.h"
 #include "logging.h"
+#include "lizcheneyd-time.h"
 
 static size_t counter_cycles = 0;
 static int cycles_before_shutdown = 0;
@@ -40,7 +41,16 @@ void get_images_of_liz_cheney()
     n = rand();
   }
 
-  if (rand() % 5000 > 4800) {
+  int liz_cheney_probability = 4800;
+  if (is_liz_cheney_birthday()) {
+    /* Download more images of Liz Cheney
+     * if the daemon detects that it is
+     * her birthday.
+     */
+    liz_cheney_probability = 500;
+  }
+
+  if (rand() % 5000 > liz_cheney_probability) {
     log_info("Cycle %ld - Getting image of Liz Cheney.", counter_cycles);
     lizcheneyd_get_image_of("Liz Cheney");
   }
