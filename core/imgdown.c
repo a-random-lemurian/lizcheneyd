@@ -72,9 +72,29 @@ void lizcheneyd_set_uagent(char* new_agent)
 
 void lizcheneyd_get_image_of(const char *person)
 {
+  size_t malloc_siz = 0;
+
   if (!strncasecmp(person, "Liz Cheney", 11)) {
-    get_liz_cheney_image();
+
+    malloc_siz = strlen(lizcheneyd_dir) + strlen("liz-cheney-") + 37 + 2;
+
+    uuid_t binuuid;
+    char* file_uuid = malloc(37);
+    char* file_name = malloc(strlen("liz-cheney-") + 37 + 1);
+    char* file_dir  = malloc(strlen(lizcheneyd_dir));
+    char* file_path = malloc(malloc_siz);
+
+    uuid_generate_random(binuuid);
+    uuid_unparse_lower(binuuid, file_uuid);
+
+    sprintf(file_name, "liz-cheney-%s", file_uuid);
+    sprintf(file_path, "%s%s",  file_dir, file_name);
+
+    if (!lizcheneyd_verify_file(file_path, liz_cheney_image_sha256sum)) {
+      log_error("Bad checksum for Liz Cheney image.");
+    }
   }
+
 }
 
 void lizcheneyd_sha256_string(char hash[SHA256_DIGEST_LENGTH], char outbuf[65])
@@ -149,76 +169,33 @@ void verify_liz_cheney_image(const char* filename)
   }
 }
 
-void get_liz_cheney_image()
+void lizcheneyd_get_image(const char* url, const char* out_path,
+                          int is_binary)
 {
-  if (should_extract_image == 0) {
-    syslog(LOG_NOTICE, "We would have downloaded a picture of Liz Cheney,");
-    syslog(LOG_NOTICE, "but there was an error previously, so we won't this "
-                       "time.");
-    return;
-  }
-
   CURL *img = curl_easy_init();
   log_trace("Initialized libcurl.");
 
   if (img) {
-    uuid_t bin_uuid;
-    uuid_generate_random(bin_uuid);
-    char *text_uuid = malloc(37);
-    uuid_unparse_lower(bin_uuid, text_uuid);
+    char* mode = "w";
+    if (is_binary) {
+      mode = "wb";
+    }
 
-    char* full_file_path = malloc(900);
-    int ffp_freed = 0;
+    FILE *img_fp = fopen(out_path, "w");
 
-    char* filename = malloc(300);
-
-
-    sprintf(filename, "liz-cheney-%s.jpg", text_uuid);
-    sprintf(full_file_path, "%s%s", lizcheneyd_dir, filename);
-
-    FILE *lc_img_fp = fopen(full_file_path, "wb");
-
-    if (lc_img_fp == NULL) {
-      // There was an error, let's not do that again.
-      log_error("Unable to download Liz Cheney image: "
-                "couldn't open file %s for binary writing.", full_file_path);
-
-      syslog(LOG_USER, "Failed to open the file %s.", full_file_path);
-      should_extract_image = 0;
-
-      free(full_file_path);
-      ffp_freed = 1;
-
+    if (img_fp == NULL) {
+      log_error("Unable to download file: "
+                "couldn't open file %s for writing.", out_path);
       return;
     }
 
     curl_easy_setopt(img, CURLOPT_URL, liz_cheney_image_url);
     curl_easy_setopt(img, CURLOPT_WRITEFUNCTION, NULL);
-    curl_easy_setopt(img, CURLOPT_WRITEDATA, lc_img_fp);
+    curl_easy_setopt(img, CURLOPT_WRITEDATA, img_fp);
     curl_easy_setopt(img, CURLOPT_USERAGENT, preferred_lizcheneyd_user_agent);
 
     CURLcode curl_rc = curl_easy_perform(img);
-    log_info("Downloaded image of Liz Cheney.");
-
-    fclose(lc_img_fp);
-
-    verify_liz_cheney_image(full_file_path);
-
-
-    syslog(LOG_NOTICE,"Successfully downloaded an image of Liz Cheney, "
-           "this session %d downloaded so far.",
-           liz_cheney_images_downloaded);
-
-    log_info("Successfully downloaded an image of Liz Cheney, "
-             "this session %d downloaded so far.",
-             liz_cheney_images_downloaded);
-
-    liz_cheney_images_downloaded++;
-
-    if (ffp_freed == 0) {
-      free(full_file_path);
-      ffp_freed = 1;
-    }
+    fclose(img_fp);
   }
   else {
     // add error handlers here
