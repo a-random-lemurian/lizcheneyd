@@ -79,18 +79,18 @@ void lizcheneyd_get_image_of(const char *person)
 
   if (!strncasecmp(person, "Liz Cheney", 11)) {
 
-    malloc_siz = strlen(lizcheneyd_dir) + strlen("liz-cheney-") + 37 + 2;
+    malloc_siz = strlen(lizcheneyd_dir) + strlen("liz-cheney-") + 37 + 20;
 
     uuid_t binuuid;
+    uuid_generate_random(binuuid);
+
     char* file_uuid = malloc(37);
-    char* file_name = malloc(strlen("liz-cheney-") + 37 + 1);
-    char* file_dir  = malloc(strlen(lizcheneyd_dir));
+    char* file_name = malloc(malloc_siz);
     char* file_path = malloc(malloc_siz);
 
-    uuid_generate_random(binuuid);
     uuid_unparse_lower(binuuid, file_uuid);
-
-    sprintf(file_name, "liz-cheney-%s", file_uuid);
+    sprintf(file_name, "liz-cheney-%s.jpg", file_uuid);
+    sprintf(file_path, "%s%s", lizcheneyd_dir, file_name);
 
     lizcheneyd_get_image(liz_cheney_image_url, file_path, 1);
 
@@ -99,6 +99,10 @@ void lizcheneyd_get_image_of(const char *person)
                 "File in question: %s", file_path,
                  liz_cheney_image_sha256sum, last_checksum);
     }
+
+    free(file_uuid);
+    free(file_name);
+    free(file_path);
   }
 
 }
