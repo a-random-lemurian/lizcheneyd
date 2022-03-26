@@ -122,23 +122,31 @@ int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
   return 0;
 }
 
-void verify_liz_cheney_image(const char* filename)
+static char* last_checksum = NULL;
+
+int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
 {
   char* out_hash = malloc(65);
-
   lizcheneyd_sha256_file(filename, out_hash);
 
-  if (!strcmp(out_hash, liz_cheney_image_sha256sum)) {
-    
+  strncpy(last_checksum, out_hash, 64);
+
+  if (!strcmp(out_hash, sha256_checksum)) {
+    return 1;
   }
-  else {
+  else { 
+    return 0;
+  }
+}
+
+void verify_liz_cheney_image(const char* filename)
+{
+  if (!lizcheneyd_verify_file(filename, liz_cheney_image_sha256sum) == 0) {
     syslog(LOG_WARNING,
            "WARNING: Liz Cheney image download at %s has bad checksum!"
            "Expected %s, got %s",
-           filename, liz_cheney_image_sha256sum, out_hash);
+           filename, liz_cheney_image_sha256sum, last_checksum);
   }
-
-  free(out_hash);
 }
 
 void get_liz_cheney_image()
