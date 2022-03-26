@@ -7,7 +7,7 @@
 void lizcheneyd_should_shutdown()
 {
   int cbs = get_cycles_before_shutdown();
-  int cycles_done = get_cycles_done();
+  int cycles_done = get_cycles();
 
   if (cbs != 0) {
     if (cycles_done > cbs) {
@@ -29,7 +29,7 @@ void lizcheneyd_shutdown_because_of(int reason)
 
   syslog(LOG_NOTICE,
          "Shutting down now (ran through %ld cycles). Reason: %s\n",
-         get_cycles_done(), reason_string);
+         get_cycles(), reason_string);
 
   lizcheneyd_shutdown(0);
 }

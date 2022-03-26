@@ -15,7 +15,7 @@ int get_cycles_before_shutdown();
  * Return the number of cycles that have passed since lizcheneyd
  * was started.
  */
-size_t get_cycles_done();
+size_t get_cycles();
 
 /*
  * Set cycles before shutdown, if lizcheneyd will only run for

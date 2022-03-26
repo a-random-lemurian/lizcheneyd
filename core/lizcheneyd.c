@@ -10,7 +10,7 @@
 #include "logging.h"
 #include "lizcheneyd-time.h"
 
-static size_t counter_cycles = 0;
+static size_t cycles = 0;
 static int cycles_before_shutdown = 0;
 
 int get_cycles_before_shutdown()
@@ -18,9 +18,9 @@ int get_cycles_before_shutdown()
   return cycles_before_shutdown;
 }
 
-size_t get_cycles_done()
+size_t get_cycles()
 {
-  return counter_cycles;
+  return cycles;
 }
 
 void set_cycles_before_shutdown(int new_value)
@@ -51,7 +51,7 @@ void get_images_of_liz_cheney()
   }
 
   if (rand() % 5000 > liz_cheney_probability) {
-    log_info("Cycle %ld - Getting image of Liz Cheney.", counter_cycles);
+    log_info("Cycle %ld - Getting image of Liz Cheney.", cycles);
     lizcheneyd_get_image_of("Liz Cheney");
   }
 }
@@ -110,13 +110,13 @@ void lizcheneyd()
   for (;;) {
     sleep(20);
 
-    counter_cycles++;
+    cycles++;
 
-    syslog(LOG_DEBUG, "Completed cycle %ld.", counter_cycles);
+    syslog(LOG_DEBUG, "Completed cycle %ld.", cycles);
 
     get_images_of_liz_cheney();
     lizcheneyd_should_shutdown();
 
-    log_trace("Completed cycle %d.", counter_cycles);
+    log_trace("Completed cycle %d.", cycles);
   }
 }
