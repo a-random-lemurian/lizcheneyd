@@ -15,8 +15,12 @@ OBJ              := $(SRC:%=$(BUILD_DIR)/%.o)
 LINK_LIB_NAMES    = crypto uuid ssl curl
 LINK_LIB_FLAGS    = $(addprefix -l,$(LINK_LIB_NAMES))
 
-LDFLAGS           = -Os $(LINK_LIB_FLAGS)
-CFLAGS            = -Os $(INC_FLAGS)
+ifndef DEBUG
+DEBUG_FLAGS=-g3
+endif
+
+LDFLAGS           = -Os $(LINK_LIB_FLAGS) $(DEBUG_FLAGS)
+CFLAGS            = -Os $(INC_FLAGS) $(DEBUG_FLAGS)
 
 EXEC              = lizcheneyd
 
