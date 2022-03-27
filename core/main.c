@@ -26,7 +26,7 @@ int main(int argc, char **argv)
      * to start. */
     OPT_BOOLEAN(0, "no-return", &dont_fork,
                 "Do not return until daemon has finished running."),
-    OPT_BOOLEAN(0, "no-daemon", NULL, "Ignored (retained for backwards compatibility)"),
+    OPT_BOOLEAN(0, "no-daemon", &dont_fork, "Same as --no-return"),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
     OPT_STRING(0, "uagent", &user_agent,
