@@ -96,8 +96,8 @@ void lizcheneyd_get_image_of(const char *person)
 
     if (!lizcheneyd_verify_file(file_path, liz_cheney_image_sha256sum)) {
       log_error("Bad checksum for Liz Cheney image. Expected %s but got %s."
-                "File in question: %s", file_path,
-                 liz_cheney_image_sha256sum, last_checksum);
+                "File in question: %s", liz_cheney_image_sha256sum,
+                last_checksum, file_path);
     }
 
     free(file_uuid);
