@@ -159,7 +159,7 @@ int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
   char* out_hash = malloc(65);
   lizcheneyd_sha256_file(filename, out_hash);
 
-  strncpy(last_checksum, out_hash, 64);
+  last_checksum = out_hash;
 
   if (!strcmp(out_hash, sha256_checksum)) {
     return 1;
