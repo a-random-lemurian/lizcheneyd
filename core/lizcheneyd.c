@@ -12,6 +12,17 @@
 
 static size_t cycles = 0;
 static int cycles_before_shutdown = 0;
+static unsigned int cycle_time = 20;
+
+unsigned int get_length_of_cycle()
+{
+  return cycle_time;
+}
+
+void set_length_of_cycle(unsigned int new_val)
+{
+  cycle_time = new_val;
+}
 
 int get_cycles_before_shutdown()
 {
@@ -108,7 +119,7 @@ void lizcheneyd()
   log_trace("Registered all signal handlers.");
 
   for (;;) {
-    sleep(20);
+    sleep(cycle_time);
 
     cycles++;
 

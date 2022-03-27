@@ -18,6 +18,16 @@ int get_cycles_before_shutdown();
 size_t get_cycles();
 
 /*
+ * Return the time that lizcheneyd waits between cycles.
+ */
+unsigned int get_length_of_cycle();
+
+/*
+ * Set the time to wait between cycles.
+ */
+void set_length_of_cycle(unsigned int new_val);
+
+/*
  * Set cycles before shutdown, if lizcheneyd will only run for
  * a limited number of cycles.
  */

@@ -12,6 +12,7 @@
 #include "logging.h"
 
 static int dont_fork = 0;
+static unsigned int cycle_time = 20;
 static int cycles_before_shutdown = 0;
 static char* user_agent = NULL;
 
@@ -29,6 +30,8 @@ int main(int argc, char **argv)
     OPT_BOOLEAN(0, "no-daemon", &dont_fork, "Same as --no-return"),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
+    OPT_INTEGER(0, "cycle-length", &cycle_time,
+                "Delay between each cycle (in seconds)"),
     OPT_STRING(0, "uagent", &user_agent,
                "Set a user agent"),
     OPT_END()
@@ -47,6 +50,7 @@ int main(int argc, char **argv)
   argparse_parse(&ap, argc, (const char**)argv);
 
   set_cycles_before_shutdown(cycles_before_shutdown);
+  set_length_of_cycle(cycle_time);
 
   if (user_agent != NULL) {
     lizcheneyd_set_uagent(user_agent);
