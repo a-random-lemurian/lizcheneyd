@@ -14,6 +14,7 @@
  */
 int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
 {
+  log_trace("Starting a permissions check for %s", directory);
   int rc = 0;
 
   uuid_t bin_uuid;
@@ -24,6 +25,7 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
   char *filename = malloc(130 + dir_siz);
 
   sprintf(filename, "%s.file_check.%s.tmp", directory, text_uuid);
+  log_trace("Using %s as dummy file.", filename);
 
   FILE* fp = fopen(filename, "w");
 
@@ -39,6 +41,7 @@ int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
     }
   }
   else {
+    log_trace("Successfully opened %s.", filename);
     int rc = remove(filename);
     if (rc == 0) {
       syslog(LOG_NOTICE,

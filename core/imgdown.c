@@ -99,6 +99,9 @@ void lizcheneyd_get_image_of(const char *person)
                 "File in question: %s", liz_cheney_image_sha256sum,
                 last_checksum, file_path);
     }
+    else {
+      log_trace("Checksum for Liz Cheney image matches.");
+    }
 
     free(file_uuid);
     free(file_name);
@@ -123,6 +126,7 @@ int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
   FILE *fp = fopen(filename, "rb");
 
   if (!fp) {
+    log_error("Unable to open %s while attempting to sha256sum it", filename);
     return -534;
   }
   else {
@@ -141,6 +145,7 @@ int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
 
     while ((bytes_read = fread(buf, 1, buf_siz, fp))) {
       SHA256_Update(&s256, buf, bytes_read);
+      log_trace("Read %d bytes from %s for hashing", buf_siz, filename);
     }
 
     SHA256_Final(hash, &s256);
@@ -198,19 +203,25 @@ void lizcheneyd_get_image(const char* url, const char* out_path,
                 "couldn't open file %s for writing.", out_path);
       return;
     }
+    else {
+      log_trace("Opened file %s.", out_path);
+    }
 
     curl_easy_setopt(img, CURLOPT_URL, liz_cheney_image_url);
     curl_easy_setopt(img, CURLOPT_WRITEFUNCTION, NULL);
     curl_easy_setopt(img, CURLOPT_WRITEDATA, img_fp);
     curl_easy_setopt(img, CURLOPT_USERAGENT, preferred_lizcheneyd_user_agent);
 
+    log_trace("Set all options properly, starting download.");
     CURLcode curl_rc = curl_easy_perform(img);
+    log_trace("Download finished.");
     fclose(img_fp);
   }
   else {
     // add error handlers here
   }
 
+  log_trace("Cleaning up libcurl.");
   curl_easy_cleanup(img);
 }
 

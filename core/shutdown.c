@@ -31,6 +31,9 @@ void lizcheneyd_shutdown_because_of(int reason)
          "Shutting down now (ran through %ld cycles). Reason: %s\n",
          get_cycles(), reason_string);
 
+  log_info("Shutting down now after %ld cycles. Reason: %s",
+          get_cycles(), reason_string);
+
   lizcheneyd_shutdown(0);
 }
 
