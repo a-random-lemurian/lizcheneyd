@@ -110,6 +110,8 @@ void lizcheneyd_init_logging()
 
 void lizcheneyd()
 {
+  lizcheneyd_root_access_check();
+
   syslog(LOG_NOTICE, "Started lizcheneyd.");
 
   lizcheneyd_init_logging();

@@ -8,6 +8,25 @@
 #include "imgdown.h"
 #include "logging.h"
 
+
+int lizcheneyd_root_access_check()
+{
+  int uid = getuid();
+  if (uid != 0) {
+    log_warn("UID is not 0. lizcheneyd must be run as root.");
+    log_warn("Work on allowing lizcheneyd to operate without root access is ongoing.");
+    log_warn("Sleeping for 30 seconds.");
+
+    sleep(30);
+  }
+  else if (uid == 0) {
+    log_info("lizcheneyd is running as root.");
+  }
+
+  return uid;
+}
+
+
 /*
  * Create a temporary dummy file in the lizcheneyd directory
  * to check for access.
