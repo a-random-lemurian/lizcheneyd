@@ -9,6 +9,7 @@
 #include "shutdown.h"
 #include "logging.h"
 #include "lizcheneyd-time.h"
+#include "check-perms.h"
 
 static size_t cycles = 0;
 static int cycles_before_shutdown = 0;
@@ -44,6 +45,11 @@ void lizcheneyd_sigint_handler()
   lizcheneyd_shutdown_because_of(SIGINT_CAUGHT);
 }
 
+static struct liz_cheney_image liz_cheney_images[] = {
+    {"https://upload.wikimedia.org/wikipedia/commons/9/9a/"
+     "Liz_Cheney_official_116th_Congress_portrait.jpg",
+     "d6f8cfe9f487b0055e3074ea4ba9d8ad1a63767b4e339804687b8a2aabdda9b4"}};
+
 void get_images_of_liz_cheney()
 {
   int n;
@@ -63,7 +69,9 @@ void get_images_of_liz_cheney()
 
   if (rand() % 5000 > liz_cheney_probability) {
     log_info("Cycle %ld - Getting image of Liz Cheney.", cycles);
-    lizcheneyd_get_image_of("Liz Cheney");
+    lizcheneyd_get_image_of(
+        &liz_cheney_images[rand() % (sizeof(struct liz_cheney_image) /
+                                     sizeof(liz_cheney_images))]);
   }
 }
 
