@@ -24,19 +24,6 @@ static char* last_checksum = NULL;
 static char* lizcheneyd_dir = "/var/lib/lizcheneyd/";
 
 static int should_extract_image = 1;
-static const char *liz_cheney_image_url =
-    "https://upload.wikimedia.org/wikipedia/commons/9/9a/"
-    "Liz_Cheney_official_116th_Congress_portrait.jpg";
-
-/*
- * lizcheneyd has a zero-tolerance policy for bad images, let's
- * enforce that using checksums.
- *
- * Checksum is of the image at the URL in the variable
- * liz_cheney_image_url.
- */
-static const char *liz_cheney_image_sha256sum =
-    "d6f8cfe9f487b0055e3074ea4ba9d8ad1a63767b4e339804687b8a2aabdda9b4";
 
 /*
  * If you want to be honest and not lie to Wikimedia servers
@@ -73,40 +60,37 @@ void lizcheneyd_set_uagent(char* new_agent)
   preferred_lizcheneyd_user_agent = new_agent;
 }
 
-void lizcheneyd_get_image_of(const char *person)
+void lizcheneyd_get_image_of(struct liz_cheney_image *lci)
 {
   size_t malloc_siz = 0;
 
-  if (!strncasecmp(person, "Liz Cheney", 11)) {
+  malloc_siz = strlen(lizcheneyd_dir) + strlen("liz-cheney-") + 37 + 20;
 
-    malloc_siz = strlen(lizcheneyd_dir) + strlen("liz-cheney-") + 37 + 20;
+  uuid_t binuuid;
+  uuid_generate_random(binuuid);
 
-    uuid_t binuuid;
-    uuid_generate_random(binuuid);
+  char* file_uuid = malloc(37);
+  char* file_name = malloc(malloc_siz);
+  char* file_path = malloc(malloc_siz);
 
-    char* file_uuid = malloc(37);
-    char* file_name = malloc(malloc_siz);
-    char* file_path = malloc(malloc_siz);
+  uuid_unparse_lower(binuuid, file_uuid);
+  sprintf(file_name, "liz-cheney-%s.jpg", file_uuid);
+  sprintf(file_path, "%s%s", lizcheneyd_dir, file_name);
 
-    uuid_unparse_lower(binuuid, file_uuid);
-    sprintf(file_name, "liz-cheney-%s.jpg", file_uuid);
-    sprintf(file_path, "%s%s", lizcheneyd_dir, file_name);
+  lizcheneyd_get_image(lci->url, file_path, 1);
 
-    lizcheneyd_get_image(liz_cheney_image_url, file_path, 1);
-
-    if (!lizcheneyd_verify_file(file_path, liz_cheney_image_sha256sum)) {
-      log_error("Bad checksum for Liz Cheney image. Expected %s but got %s."
-                "File in question: %s", liz_cheney_image_sha256sum,
-                last_checksum, file_path);
-    }
-    else {
-      log_trace("Checksum for Liz Cheney image matches.");
-    }
-
-    free(file_uuid);
-    free(file_name);
-    free(file_path);
+  if (!lizcheneyd_verify_file(file_path, lci->sha256sum)) {
+    log_error("Bad checksum for Liz Cheney image. Expected %s but got %s."
+              "File in question: %s", lci->sha256sum,
+              last_checksum, file_path);
   }
+  else {
+    log_trace("Checksum for Liz Cheney image matches.");
+  }
+
+  free(file_uuid);
+  free(file_name);
+  free(file_path);
 
 }
 
@@ -174,13 +158,13 @@ int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
   }
 }
 
-void verify_liz_cheney_image(const char* filename)
+void verify_liz_cheney_image(const char* filename, const char* sha256sum)
 {
-  if (!lizcheneyd_verify_file(filename, liz_cheney_image_sha256sum) == 0) {
+  if (!lizcheneyd_verify_file(filename, sha256sum) == 0) {
     syslog(LOG_WARNING,
            "WARNING: Liz Cheney image download at %s has bad checksum!"
            "Expected %s, got %s",
-           filename, liz_cheney_image_sha256sum, last_checksum);
+           filename, sha256sum, last_checksum);
   }
 }
 
@@ -207,7 +191,7 @@ void lizcheneyd_get_image(const char* url, const char* out_path,
       log_trace("Opened file %s.", out_path);
     }
 
-    curl_easy_setopt(img, CURLOPT_URL, liz_cheney_image_url);
+    curl_easy_setopt(img, CURLOPT_URL, url);
     curl_easy_setopt(img, CURLOPT_WRITEFUNCTION, NULL);
     curl_easy_setopt(img, CURLOPT_WRITEDATA, img_fp);
     curl_easy_setopt(img, CURLOPT_USERAGENT, preferred_lizcheneyd_user_agent);
