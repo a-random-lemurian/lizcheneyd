@@ -4,6 +4,7 @@
 #include <syslog.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "imgdown.h"
 #include "logging.h"
