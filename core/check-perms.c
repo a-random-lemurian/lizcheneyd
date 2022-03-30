@@ -27,11 +27,6 @@ int lizcheneyd_root_access_check()
   return uid;
 }
 
-
-/*
- * Create a temporary dummy file in the lizcheneyd directory
- * to check for access.
- */
 int lizcheneyd_check_dir_access(const char* directory, size_t dir_siz)
 {
   log_trace("Starting a permissions check for %s", directory);
