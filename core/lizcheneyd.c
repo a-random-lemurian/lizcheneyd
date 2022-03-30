@@ -46,9 +46,13 @@ void lizcheneyd_sigint_handler()
 }
 
 static struct liz_cheney_image liz_cheney_images[] = {
-    {"https://upload.wikimedia.org/wikipedia/commons/9/9a/"
-     "Liz_Cheney_official_116th_Congress_portrait.jpg",
-     "d6f8cfe9f487b0055e3074ea4ba9d8ad1a63767b4e339804687b8a2aabdda9b4"}};
+  {"https://upload.wikimedia.org/wikipedia/commons/9/9a/"
+   "Liz_Cheney_official_116th_Congress_portrait.jpg",
+   "d6f8cfe9f487b0055e3074ea4ba9d8ad1a63767b4e339804687b8a2aabdda9b4"},
+  {"https://upload.wikimedia.org/wikipedia/commons/8/88/"
+   "Liz_Cheney_15800286.jpg",
+   "d7afaef37dc6992655a5e1eee186b4b46972f236ebd8dc94d0e774682e64bd79"}
+};
 
 void get_images_of_liz_cheney()
 {
