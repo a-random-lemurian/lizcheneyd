@@ -160,7 +160,7 @@ int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
 
 void verify_liz_cheney_image(const char* filename, const char* sha256sum)
 {
-  if (!lizcheneyd_verify_file(filename, sha256sum) == 0) {
+  if (!lizcheneyd_verify_file(filename, sha256sum)) {
     syslog(LOG_WARNING,
            "WARNING: Liz Cheney image download at %s has bad checksum!"
            "Expected %s, got %s",
