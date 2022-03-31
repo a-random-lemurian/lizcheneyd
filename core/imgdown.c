@@ -2,17 +2,12 @@
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
-#include <syslog.h>
-#include <errno.h>
 #include <uuid/uuid.h>
-#include <openssl/sha.h>
 
 #include "imgdown.h"
 #include "logging.h"
 #include "check-perms.h"
-
-
-static char* last_checksum = NULL;
+#include "verify-file.h"
 
 /*
  * Default lizcheneyd image directory. Always add an ending forward
@@ -82,7 +77,7 @@ void lizcheneyd_get_image_of(struct liz_cheney_image *lci)
   if (!lizcheneyd_verify_file(file_path, lci->sha256sum)) {
     log_error("Bad checksum for Liz Cheney image. Expected %s but got %s."
               "File in question: %s", lci->sha256sum,
-              last_checksum, file_path);
+              lizcheneyd_last_sum(), file_path);
   }
   else {
     log_trace("Checksum for Liz Cheney image matches.");
@@ -92,80 +87,6 @@ void lizcheneyd_get_image_of(struct liz_cheney_image *lci)
   free(file_name);
   free(file_path);
 
-}
-
-void lizcheneyd_sha256_string(char hash[SHA256_DIGEST_LENGTH], char outbuf[65])
-{
-  int i = 0;
-
-  for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-    sprintf(outbuf + (i * 2), "%02x", (unsigned char)hash[i]);
-  }
-
-  outbuf[64] = 0;
-}
-
-int lizcheneyd_sha256_file(const char *filename, char outputBuffer[65])
-{
-  FILE *fp = fopen(filename, "rb");
-
-  if (!fp) {
-    log_error("Unable to open %s while attempting to sha256sum it", filename);
-    return -534;
-  }
-  else {
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-
-    SHA256_CTX s256;
-    SHA256_Init(&s256);
-
-    const int buf_siz = 32768;
-    unsigned char *buf = malloc(buf_siz);
-    int bytes_read = 0;
-
-    if (!buf) {
-      return ENOMEM;
-    }
-
-    while ((bytes_read = fread(buf, 1, buf_siz, fp))) {
-      SHA256_Update(&s256, buf, bytes_read);
-      log_trace("Read %d bytes from %s for hashing", buf_siz, filename);
-    }
-
-    SHA256_Final(hash, &s256);
-    lizcheneyd_sha256_string(hash, outputBuffer);
-    fclose(fp);
-    free(buf);
-  }
-
-  return 0;
-}
-
-
-
-int lizcheneyd_verify_file(const char* filename, const char* sha256_checksum)
-{
-  char* out_hash = malloc(65);
-  lizcheneyd_sha256_file(filename, out_hash);
-
-  last_checksum = out_hash;
-
-  if (!strcmp(out_hash, sha256_checksum)) {
-    return 1;
-  }
-  else { 
-    return 0;
-  }
-}
-
-void verify_liz_cheney_image(const char* filename, const char* sha256sum)
-{
-  if (!lizcheneyd_verify_file(filename, sha256sum)) {
-    syslog(LOG_WARNING,
-           "WARNING: Liz Cheney image download at %s has bad checksum!"
-           "Expected %s, got %s",
-           filename, sha256sum, last_checksum);
-  }
 }
 
 void lizcheneyd_get_image(const char* url, const char* out_path,
