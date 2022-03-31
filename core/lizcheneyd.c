@@ -74,8 +74,8 @@ void get_images_of_liz_cheney()
   if (rand() % 5000 > liz_cheney_probability) {
     log_info("Cycle %ld - Getting image of Liz Cheney.", cycles);
     
-    size_t i = rand() % (sizeof(struct liz_cheney_image) /
-                                sizeof(liz_cheney_images));
+    size_t i = rand() % (sizeof(liz_cheney_images)/
+                         sizeof(struct liz_cheney_image));
     
     log_trace("Downloading image from %s",liz_cheney_images[i].url);
 
