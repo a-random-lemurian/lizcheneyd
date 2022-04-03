@@ -10,6 +10,7 @@
 #include "logging.h"
 #include "lizcheneyd-time.h"
 #include "check-perms.h"
+#include "sleep.h"
 
 static size_t cycles = 0;
 static int cycles_before_shutdown = 0;
@@ -139,7 +140,7 @@ void lizcheneyd()
   log_trace("Registered all signal handlers.");
 
   for (;;) {
-    sleep(cycle_time);
+    wait_for_next_cycle();
 
     cycles++;
 
