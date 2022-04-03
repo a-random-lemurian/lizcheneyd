@@ -10,11 +10,13 @@
 #include "shutdown.h"
 #include "imgdown.h"
 #include "logging.h"
+#include "sleep.h"
 
 static int dont_fork = 0;
 static unsigned int cycle_time = 20;
 static int cycles_before_shutdown = 0;
 static char* user_agent = NULL;
+static int sleep_is_in_milliseconds = 0;
 
 int main(int argc, char **argv)
 {
@@ -28,6 +30,8 @@ int main(int argc, char **argv)
     OPT_BOOLEAN(0, "no-return", &dont_fork,
                 "Do not return until daemon has finished running."),
     OPT_BOOLEAN(0, "no-daemon", &dont_fork, "Same as --no-return"),
+    OPT_BOOLEAN(0, "sleep-in-ms", &sleep_is_in_milliseconds,
+                "Sleep in milliseconds, not seconds."),
     OPT_INTEGER(0, "cycles", &cycles_before_shutdown,
                 "Run for a limited number of cycles before shutdown"),
     OPT_INTEGER(0, "cycle-length", &cycle_time,
@@ -56,6 +60,9 @@ int main(int argc, char **argv)
     lizcheneyd_set_uagent(user_agent);
   }
 
+  if (sleep_is_in_milliseconds) {
+    set_sleep_mode(SLEEP_MILLISECOND);
+  }
 
   if (!dont_fork) {
     log_info("Making daemon system call.");
