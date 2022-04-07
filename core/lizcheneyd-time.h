@@ -10,6 +10,10 @@
  * 28, 1966.
  * 
  * https://en.wikipedia.org/wiki/Liz_Cheney
+ * 
+ * TODO: return 1 when it is July 28, IN AMERICA, not Asia
+ * or any other timezone (on the other side of the
+ * International Date Line).
  */
 int is_liz_cheney_birthday();
 
