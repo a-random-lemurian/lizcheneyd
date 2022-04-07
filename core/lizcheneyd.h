@@ -3,6 +3,14 @@
 #include "logging.h"
 #include <stddef.h>
 
+#ifdef __APPLE__
+#warning lizcheneyd is not guaranteed to work on Mac!
+#elif __WIN32__
+#error lizcheneyd is not supported on Windows. \
+       Remove this macro at your own risk.
+#endif
+
+
 /*
  * Return the number of cycles that lizcheneyd will run for, when
  * in limited cycle mode. When the function returns 0, it means
