@@ -10,36 +10,30 @@
        Remove this macro at your own risk.
 #endif
 
+#define LIZCHENEYD_LOG_FILE "/var/log/lizcheneyd.log"
+
+typedef struct lizcheneyd_start_params {
+  char *user_agent;
+  char *log_file;
+  int non_root_mode;
+
+  // How many cycles to run before shutting down. 0 is infinite.
+  size_t cycles;
+  // Current cycle number.
+  size_t current_cycle;
+
+  // Time between cycles, in either seconds or milliseconds depending on sleep mode
+  unsigned int cycle_time;
+
+  // Sleep mode. 1 for milliseconds, 0 for seconds.
+  int sleep_mode;
+
+} lizcheneyd_start_params;
 
 /*
- * Return the number of cycles that lizcheneyd will run for, when
- * in limited cycle mode. When the function returns 0, it means
- * that there is no limit on the number of cycles that lizcheneyd
- * will run for.  
+ * Initialize lizcheneyd's default parameters.
  */
-int get_cycles_before_shutdown();
-
-/*
- * Return the number of cycles that have passed since lizcheneyd
- * was started.
- */
-size_t get_cycles();
-
-/*
- * Return the time that lizcheneyd waits between cycles.
- */
-unsigned int get_length_of_cycle();
-
-/*
- * Set the time to wait between cycles.
- */
-void set_length_of_cycle(unsigned int new_val);
-
-/*
- * Set cycles before shutdown, if lizcheneyd will only run for
- * a limited number of cycles.
- */
-void set_cycles_before_shutdown(int new_value);
+void lizcheneyd_init_default_params(lizcheneyd_start_params *params);
 
 /*
  * lizcheneyd's SIGINT handler.
@@ -51,7 +45,7 @@ void lizcheneyd_sigint_handler();
  * Liz Cheney's birthday, this function will more often decide
  * to download images of Liz Cheney.
  */
-void get_images_of_liz_cheney();
+void get_images_of_liz_cheney(lizcheneyd_start_params* params);
 
 /*
  * Translate log messages sent out by lizcheneyd to it's own
@@ -62,12 +56,12 @@ void lizcheneyd_syslog_message(log_Event *le);
 /*
  * Initialize lizcheneyd's logging.
  */
-void lizcheneyd_init_logging();
+void lizcheneyd_init_logging(lizcheneyd_start_params* params);
 
 /*
  * The main function of lizcheneyd. Contains an infinite loop which runs
  * lizcheneyd's regular operations.
  */
-void lizcheneyd();
+void lizcheneyd(lizcheneyd_start_params* params);
 
 #endif /* LIZCHENEYD_H */

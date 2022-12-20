@@ -6,8 +6,6 @@
 #include "lizcheneyd.h"
 #include "sleep.h"
 
-static int sleep_mode = 0;
-
 void msleep(int tms)
 {
   struct timeval tv;
@@ -16,27 +14,17 @@ void msleep(int tms)
   select(0, NULL, NULL, NULL, &tv);
 }
 
-int get_sleep_mode()
+void wait_for_next_cycle(lizcheneyd_start_params* params)
 {
-  return sleep_mode;
-}
-
-int set_sleep_mode(int new_mode)
-{
-  sleep_mode = new_mode;
-}
-
-void wait_for_next_cycle()
-{
-  if (sleep_mode == SLEEP_SECOND) {
-    sleep(get_length_of_cycle());
+  if (params->sleep_mode == SLEEP_SECOND) {
+    sleep(params->cycle_time);
   }
-  else if (sleep_mode == SLEEP_MILLISECOND) {
+  else if (params->sleep_mode == SLEEP_MILLISECOND) {
     /*
      * In this case, we just treat the
      * length of the cycle as
      * milliseconds, not seconds.
      */
-    msleep(get_length_of_cycle());
+    msleep(params->cycle_time);
   }
 }

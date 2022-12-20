@@ -9,41 +9,17 @@
 #include "shutdown.h"
 #include "logging.h"
 #include "lizcheneyd-time.h"
+#include "lizcheneyd.h"
 #include "check-perms.h"
 #include "sleep.h"
 
-static size_t cycles = 0;
-static int cycles_before_shutdown = 0;
-static unsigned int cycle_time = 20;
 
-unsigned int get_length_of_cycle()
-{
-  return cycle_time;
-}
-
-void set_length_of_cycle(unsigned int new_val)
-{
-  cycle_time = new_val;
-}
-
-int get_cycles_before_shutdown()
-{
-  return cycles_before_shutdown;
-}
-
-size_t get_cycles()
-{
-  return cycles;
-}
-
-void set_cycles_before_shutdown(int new_value)
-{
-  cycles_before_shutdown = new_value;
-}
+// TODO: Fix segfault on catching sigint
+static lizcheneyd_start_params* params_at_sigint;
 
 void lizcheneyd_sigint_handler()
 {
-  lizcheneyd_shutdown_because_of(SIGINT_CAUGHT);
+  lizcheneyd_shutdown_because_of(SIGINT_CAUGHT, params_at_sigint);
 }
 
 static struct liz_cheney_image liz_cheney_images[] = {
@@ -55,7 +31,7 @@ static struct liz_cheney_image liz_cheney_images[] = {
    "d7afaef37dc6992655a5e1eee186b4b46972f236ebd8dc94d0e774682e64bd79"}
 };
 
-void get_images_of_liz_cheney()
+void get_images_of_liz_cheney(lizcheneyd_start_params* params)
 {
   int n;
 
@@ -73,7 +49,7 @@ void get_images_of_liz_cheney()
   }
 
   if (rand() % 5000 > liz_cheney_probability) {
-    log_info("Cycle %ld - Getting image of Liz Cheney.", cycles);
+    log_info("Cycle %ld - Getting image of Liz Cheney.", params->current_cycle);
     
     size_t i = rand() % (sizeof(liz_cheney_images)/
                          sizeof(struct liz_cheney_image));
@@ -110,45 +86,54 @@ void lizcheneyd_syslog_message(log_Event *le)
   closelog();
 }
 
-static const char* lizcheneyd_log_file = "/var/log/lizcheneyd.log";
-
-void lizcheneyd_init_logging()
+void lizcheneyd_init_logging(lizcheneyd_start_params* params)
 {
-  FILE* fp = fopen(lizcheneyd_log_file, "a");
+  FILE* fp = fopen(params->log_file, "a");
 
   if (fp != NULL) {
     log_add_fp(fp, LCD_LOG_INFO);
     log_info("Successfully opened file for logging.");
   }
   else if (fp == NULL) {
-    log_error("Unable to open %s!", lizcheneyd_log_file);
+    log_error("Unable to open %s!", params->log_file);
   }
 
   log_add_callback(lizcheneyd_syslog_message, NULL, LCD_LOG_INFO);
 }
 
-void lizcheneyd()
+void lizcheneyd_init_default_params(lizcheneyd_start_params* params)
 {
+  params->log_file = LIZCHENEYD_LOG_FILE;
+  params->cycles = 0;          /* Infinite cycles. */
+  params->cycle_time = 20;     /* 20 seconds. */
+  params->sleep_mode = SLEEP_SECOND;
+}
+
+void lizcheneyd(lizcheneyd_start_params* params)
+{
+
   lizcheneyd_root_access_check();
 
   syslog(LOG_NOTICE, "Started lizcheneyd.");
 
-  lizcheneyd_init_logging();
+  lizcheneyd_init_logging(params);
 
   signal(SIGINT, lizcheneyd_sigint_handler);
   log_trace("Registered SIGINT handler.");
   log_trace("Registered all signal handlers.");
 
   for (;;) {
-    wait_for_next_cycle();
+    wait_for_next_cycle(params);
 
-    cycles++;
+    params->current_cycle++;
 
-    syslog(LOG_DEBUG, "Completed cycle %ld.", cycles);
+    syslog(LOG_DEBUG, "Completed cycle %ld.", params->current_cycle);
 
-    get_images_of_liz_cheney();
-    lizcheneyd_should_shutdown();
+    get_images_of_liz_cheney(params);
+    lizcheneyd_should_shutdown(params);
 
-    log_trace("Completed cycle %d.", cycles);
+    log_trace("Completed cycle %d.", params->current_cycle);
+
+    params_at_sigint = params;
   }
 }

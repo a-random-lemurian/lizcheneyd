@@ -53,17 +53,6 @@ int main(int argc, char **argv)
 
   argparse_parse(&ap, argc, (const char**)argv);
 
-  set_cycles_before_shutdown(cycles_before_shutdown);
-  set_length_of_cycle(cycle_time);
-
-  if (user_agent != NULL) {
-    lizcheneyd_set_uagent(user_agent);
-  }
-
-  if (sleep_is_in_milliseconds) {
-    set_sleep_mode(SLEEP_MILLISECOND);
-  }
-
   if (!dont_fork) {
     log_info("Making daemon system call.");
     if (daemon(0, 0) != 0) {
@@ -77,5 +66,18 @@ int main(int argc, char **argv)
 
   srand(clock());
 
-  lizcheneyd();
+  lizcheneyd_start_params params;
+  lizcheneyd_init_default_params(&params);
+
+  params.cycles = cycles_before_shutdown;
+  params.cycle_time = cycle_time;
+
+  if (user_agent != NULL) {
+    params.user_agent = user_agent;
+  }
+  if (sleep_is_in_milliseconds) {
+    params.sleep_mode = SLEEP_MILLISECOND;
+  }
+
+  lizcheneyd(&params);
 }
