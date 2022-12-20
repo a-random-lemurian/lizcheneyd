@@ -39,16 +39,20 @@ void get_images_of_liz_cheney(lizcheneyd_start_params* params)
     n = rand();
   }
 
-  int liz_cheney_probability = 4800;
+  int liz_cheney_probability = params->probability_on_non_birthday;
   if (is_liz_cheney_birthday()) {
     /* Download more images of Liz Cheney
      * if the daemon detects that it is
-     * her birthday.
+     * her birthday. Or less, depending on
+     * the value set by the user.
      */
-    liz_cheney_probability = 500;
+    liz_cheney_probability = params->probability_on_birthday;
   }
 
-  if (rand() % 5000 > liz_cheney_probability) {
+  size_t max_number =
+      params->probability_on_birthday + params->probability_on_non_birthday;
+
+  if (rand() % max_number > liz_cheney_probability) {
     log_info("Cycle %ld - Getting image of Liz Cheney.", params->current_cycle);
     
     size_t i = rand() % (sizeof(liz_cheney_images)/
@@ -107,6 +111,8 @@ void lizcheneyd_init_default_params(lizcheneyd_start_params* params)
   params->cycles = 0;          /* Infinite cycles. */
   params->cycle_time = 20;     /* 20 seconds. */
   params->sleep_mode = SLEEP_SECOND;
+  params->probability_on_birthday = LIZCHENEYD_PROBABILITY_BIRTHDAY;
+  params->probability_on_non_birthday = LIZCHENEYD_PROBABILITY_NON_BIRTHDAY;
 }
 
 void lizcheneyd(lizcheneyd_start_params* params)

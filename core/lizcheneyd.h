@@ -11,6 +11,8 @@
 #endif
 
 #define LIZCHENEYD_LOG_FILE "/var/log/lizcheneyd.log"
+#define LIZCHENEYD_PROBABILITY_NON_BIRTHDAY  4800
+#define LIZCHENEYD_PROBABILITY_BIRTHDAY      500
 
 typedef struct lizcheneyd_start_params {
   char *user_agent;
@@ -28,6 +30,10 @@ typedef struct lizcheneyd_start_params {
   // Sleep mode. 1 for milliseconds, 0 for seconds.
   int sleep_mode;
 
+  // Likelihood of downloading an image when it is not Liz Cheney's birthday
+  int probability_on_non_birthday;
+  // Likelihood of downloading an image when it is Liz Cheney's birthday
+  int probability_on_birthday;
 } lizcheneyd_start_params;
 
 /*
